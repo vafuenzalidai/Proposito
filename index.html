@@ -45,7 +45,8 @@
     .bottom-nav{position:fixed;z-index:50;bottom:0;left:0;right:0;background:rgba(255,255,255,.96);backdrop-filter:blur(14px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding:7px 7px calc(7px + env(safe-area-inset-bottom))}.bottom-nav button{border:0;background:none;color:#64748b;padding:7px 2px;font-size:10px;font-weight:800}.bottom-nav button.active{color:var(--primary)}.bottom-nav .nav-icon{display:block;font-size:19px;line-height:20px;margin-bottom:2px}
     .modal-back{position:fixed;z-index:100;inset:0;background:rgba(15,23,42,.55);display:grid;place-items:end center;padding:10px}.modal{background:white;width:min(620px,100%);max-height:92vh;overflow:auto;border-radius:22px 22px 14px 14px;box-shadow:0 -20px 60px rgba(15,23,42,.2)}.modal-head{position:sticky;top:0;background:white;display:flex;justify-content:space-between;align-items:center;padding:14px 15px;border-bottom:1px solid var(--line);z-index:2}.modal-head h3{margin:0;font-size:16px}.modal-body{padding:15px}.modal-foot{position:sticky;bottom:0;background:white;border-top:1px solid var(--line);padding:12px 15px;display:flex;gap:8px;justify-content:flex-end}
     .banner{margin:10px 0;padding:12px 13px;border-radius:14px;background:#fff7ed;border:1px solid #fed7aa;font-size:12px;display:flex;gap:10px;align-items:center;justify-content:space-between}.banner b{display:block;color:#9a3412}.banner span{color:#7c2d12}
-    @media(min-width:820px){main{padding:22px}.desktop-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,.7fr);gap:18px;align-items:start}.floating-add{right:max(24px,calc((100vw - 1180px)/2 + 24px))}.kpi-grid{grid-template-columns:repeat(4,1fr)}.modal-back{place-items:center}.modal{border-radius:22px}.bottom-nav{display:none}.app{padding-bottom:30px}.tabs{display:flex}.head{padding-top:18px}.timeline{margin-left:64px}.time-label{left:-62px;width:54px}.side-sticky{position:sticky;top:120px}}
+    .date-nav,.history-nav{display:flex;align-items:center;gap:8px}.date-nav input{min-width:150px}.history-nav .icon-btn{padding:7px 10px}.trend-grid{display:grid;grid-template-columns:1fr;gap:12px}.trend-card{padding:14px;overflow:hidden}.trend-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}.trend-head h3{margin:0;font-size:14px}.trend-head small{color:var(--muted);font-size:10px}.trend-value{font-weight:900;font-size:14px}.trend-chart{width:100%;height:165px;display:block}.trend-legend{display:flex;justify-content:space-between;gap:8px;font-size:9px;color:#94a3b8;margin-top:2px}.status.neutral{background:#e2e8f0;color:#475569}.history-note{padding:10px 12px;border-radius:12px;background:#f8fafc;color:#64748b;font-size:11px;margin-bottom:10px}.kpi-date-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:10px}.kpi-date-bar .field{margin:0;min-width:170px;flex:1}.kpi-date-bar .btn{padding:9px 11px}
+    @media(min-width:820px){main{padding:22px}.desktop-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,.7fr);gap:18px;align-items:start}.floating-add{right:max(24px,calc((100vw - 1180px)/2 + 24px))}.kpi-grid{grid-template-columns:repeat(4,1fr)}.trend-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.modal-back{place-items:center}.modal{border-radius:22px}.bottom-nav{display:none}.app{padding-bottom:30px}.tabs{display:flex}.head{padding-top:18px}.timeline{margin-left:64px}.time-label{left:-62px;width:54px}.side-sticky{position:sticky;top:120px}}
     @media(max-width:819px){.tabs{display:none}.desktop-grid{display:block}.side-sticky{margin-top:14px}.kpi-grid{grid-template-columns:repeat(2,1fr)}}
   </style>
 </head>
@@ -57,7 +58,7 @@
       <button class="icon-btn" id="notifyBtn" title="Activar notificaciones">🔔</button>
     </div>
     <div class="tabs">
-      <button class="tab active" data-tab="week">Semana</button><button class="tab" data-tab="kpis">KPIs</button><button class="tab" data-tab="reports">Reportes</button><button class="tab" data-tab="settings">Ajustes</button>
+      <button class="tab active" data-tab="week">Semana</button><button class="tab" data-tab="kpis">KPIs</button><button class="tab" data-tab="reports">Reportes</button><button class="tab" data-tab="trends">Evolución</button><button class="tab" data-tab="settings">Ajustes</button>
     </div>
   </header>
 
@@ -98,12 +99,18 @@
     </section>
 
     <section id="tab-kpis" class="hidden">
-      <div class="section-title"><h2>Check-in diario · 21:30</h2><span id="kpiDateLabel"></span></div>
+      <div class="section-title"><h2>Registro diario</h2><span id="kpiDateLabel"></span></div>
       <div class="panel form-card">
-        <p class="note" style="margin-top:0">Los indicadores de tiempo se registran en <b>minutos</b>. Alcohol se registra en unidades/bebidas estándar y alimentación como número de comidas no saludables.</p>
+        <div class="kpi-date-bar">
+          <button class="btn secondary" id="kpiPrevDay">‹ Día anterior</button>
+          <div class="field"><label>Fecha a registrar o editar</label><input id="kpiDatePicker" type="date"></div>
+          <button class="btn secondary" id="kpiNextDay">Día siguiente ›</button>
+        </div>
+        <p class="note" style="margin-top:0"><b>Puedes completar o corregir el registro durante todo el día y también días anteriores.</b> La notificación de las 21:30 es solo un recordatorio. Los tiempos se registran en minutos.</p>
         <div class="form-grid">
           <div class="field"><label>Redes sociales (min)</label><input id="kSocial" type="number" min="0" step="1"></div>
           <div class="field"><label>Deporte (min)</label><input id="kSport" type="number" min="0" step="1"></div>
+          <div class="field"><label>Gimnasio (min)</label><input id="kGym" type="number" min="0" step="1"></div>
           <div class="field"><label>Tiempo de calidad con pareja (min)</label><input id="kPartner" type="number" min="0" step="1"></div>
           <div class="field"><label>Oración / reflexión personal (min)</label><input id="kReflection" type="number" min="0" step="1"></div>
           <div class="field"><label>Alcohol (unidades)</label><input id="kAlcohol" type="number" min="0" step="0.5"></div>
@@ -111,17 +118,24 @@
         </div>
         <div class="toggle-row"><div><b style="font-size:12px">Conversación significativa fuera del trabajo</b><div class="note">Cuenta si fue una conversación que realmente importó.</div></div><button class="switch" id="kConversation" aria-label="Conversación significativa"></button></div>
         <div class="field" style="margin-top:12px"><label>Nota breve del día (opcional)</label><textarea id="kNote" placeholder="¿Qué me dio energía? ¿Qué me quitó energía?"></textarea></div>
-        <button class="btn primary" id="saveKpi" style="width:100%">Guardar registro del día</button>
+        <button class="btn primary" id="saveKpi" style="width:100%">Guardar / actualizar registro</button>
       </div>
-      <div class="section-title"><h2>Objetivos</h2><span>tu scorecard</span></div>
+      <div class="section-title"><h2>Objetivos</h2><span>semana seleccionada</span></div>
       <div class="kpi-grid" id="goalCards"></div>
     </section>
 
     <section id="tab-reports" class="hidden">
-      <div class="section-title"><h2>Reporte semanal</h2><span id="reportWeekLabel"></span></div>
+      <div class="history-note">Puedes navegar por reportes anteriores. Los registros quedan guardados en este navegador y la vista histórica está diseñada para consultar al menos los últimos 12 meses.</div>
+      <div class="section-title"><h2>Reporte semanal</h2><div class="history-nav"><button class="icon-btn" id="reportPrevWeek">‹</button><span id="reportWeekLabel"></span><button class="icon-btn" id="reportNextWeek">›</button></div></div>
       <div id="weeklyReport"></div>
-      <div class="section-title"><h2>Reporte mensual</h2><span id="reportMonthLabel"></span></div>
+      <div class="section-title"><h2>Reporte mensual</h2><div class="history-nav"><button class="icon-btn" id="reportPrevMonth">‹</button><span id="reportMonthLabel"></span><button class="icon-btn" id="reportNextMonth">›</button></div></div>
       <div id="monthlyReport"></div>
+    </section>
+
+    <section id="tab-trends" class="hidden">
+      <div class="section-title"><h2>Evolución de KPIs</h2><span>últimos 12 meses</span></div>
+      <div class="history-note">Cada gráfico muestra el resultado de cada mes y la línea de meta. Los meses sin registro se muestran como sin datos y no se interpretan como cero.</div>
+      <div class="trend-grid" id="trendGrid"></div>
     </section>
 
     <section id="tab-settings" class="hidden">
@@ -156,10 +170,11 @@
   </main>
 
   <button class="floating-add" id="floatingAdd" aria-label="Agregar actividad">+</button>
-  <nav class="bottom-nav">
+  <nav class="bottom-nav" style="grid-template-columns:repeat(5,1fr)">
     <button class="active" data-tab="week"><span class="nav-icon">🗓️</span>Semana</button>
     <button data-tab="kpis"><span class="nav-icon">✅</span>KPIs</button>
     <button data-tab="reports"><span class="nav-icon">📊</span>Reportes</button>
+    <button data-tab="trends"><span class="nav-icon">📈</span>Evolución</button>
     <button data-tab="settings"><span class="nav-icon">⚙️</span>Ajustes</button>
   </nav>
 </div>
@@ -192,10 +207,12 @@
   let selectedDate=isoDate(new Date());
   let weekStart=startOfWeek(new Date());
   let currentKpiDate=isoDate(new Date());
+  let reportWeekStart=startOfWeek(new Date());
+  let reportMonthRef=new Date(new Date().getFullYear(),new Date().getMonth(),1);
   const fallbackHolidays2026={
     '2026-01-01':'Año Nuevo','2026-04-03':'Viernes Santo','2026-04-04':'Sábado Santo','2026-05-01':'Día del Trabajo','2026-05-21':'Glorias Navales','2026-06-21':'Pueblos Indígenas','2026-06-29':'San Pedro y San Pablo','2026-07-16':'Virgen del Carmen','2026-08-15':'Asunción de la Virgen','2026-09-18':'Independencia Nacional','2026-09-19':'Glorias del Ejército','2026-10-12':'Encuentro de Dos Mundos','2026-10-31':'Iglesias Evangélicas y Protestantes','2026-11-01':'Todos los Santos','2026-12-08':'Inmaculada Concepción','2026-12-25':'Navidad'
   };
-  const goals={social:{label:'Redes sociales',unit:'min/día',target:30,type:'maxAvg'},sport:{label:'Deporte',unit:'min/sem',target:240,type:'minSum'},partner:{label:'Pareja',unit:'min/sem',target:120,type:'minSum'},reflection:{label:'Reflexión',unit:'min/sem',target:150,type:'minSum'},food:{label:'Comida no saludable',unit:'comidas/sem',target:1,type:'maxSum'},alcohol:{label:'Alcohol',unit:'días/sem',target:1,type:'maxDays'},conversation:{label:'Conversaciones',unit:'al mes',target:1,type:'minMonth'}};
+  const goals={social:{label:'Redes sociales',unit:'min/día',target:30,type:'maxAvg'},sport:{label:'Deporte',unit:'min/sem',target:180,type:'minSum'},gym:{label:'Gimnasio',unit:'min/sem',target:120,type:'minSum'},partner:{label:'Pareja',unit:'min/sem',target:120,type:'minSum'},reflection:{label:'Reflexión',unit:'min/sem',target:150,type:'minSum'},food:{label:'Comida no saludable',unit:'comidas/sem',target:1,type:'maxSum'},alcohol:{label:'Alcohol',unit:'días/sem',target:1,type:'maxDays'},conversation:{label:'Conversaciones',unit:'al mes',target:1,type:'minMonth'}};
   const monthNames=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
   const dayNames=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
   const dayShort=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
@@ -303,37 +320,46 @@
 
   function getKpi(ds){return state.kpis[ds]||null}
   function aggregate(start,end){
-    const out={days:0,social:0,sport:0,partner:0,reflection:0,food:0,alcoholDays:0,alcoholUnits:0,conversation:0};
-    for(let d=new Date(start);d<=end;d=addDays(d,1)){const k=getKpi(isoDate(d));if(!k)continue;out.days++;out.social+=num(k.social);out.sport+=num(k.sport);out.partner+=num(k.partner);out.reflection+=num(k.reflection);out.food+=num(k.food);out.alcoholUnits+=num(k.alcohol);if(num(k.alcohol)>0)out.alcoholDays++;if(k.conversation)out.conversation++}
+    const out={days:0,social:0,sport:0,gym:0,partner:0,reflection:0,food:0,alcoholDays:0,alcoholUnits:0,conversation:0};
+    for(let d=new Date(start);d<=end;d=addDays(d,1)){const k=getKpi(isoDate(d));if(!k)continue;out.days++;out.social+=num(k.social);out.sport+=num(k.sport);out.gym+=num(k.gym);out.partner+=num(k.partner);out.reflection+=num(k.reflection);out.food+=num(k.food);out.alcoholUnits+=num(k.alcohol);if(num(k.alcohol)>0)out.alcoholDays++;if(k.conversation)out.conversation++}
     out.socialAvg=out.days?out.social/out.days:0;return out;
   }
   function num(x){return Number(x)||0}
   function pct(n,d){return d?Math.round(n/d*100):0}
+  function targetFor(key,period='week'){
+    const factor=30.44/7;
+    if(key==='social')return 30;if(key==='sport')return period==='week'?180:180*factor;if(key==='gym')return period==='week'?120:120*factor;if(key==='partner')return period==='week'?120:120*factor;if(key==='reflection')return period==='week'?150:150*factor;if(key==='food')return period==='week'?1:Math.ceil(factor);if(key==='alcohol')return period==='week'?1:Math.floor(factor);if(key==='conversation')return 1;return 0;
+  }
   function kpiStatus(key,value,period='week'){
     if(key==='social')return value<30?'ok':value<40?'warn':'bad';
-    if(key==='sport'){const t=period==='week'?240:240*30.44/7;return value>=t?'ok':value>=t*.75?'warn':'bad'}
-    if(key==='partner'){const t=period==='week'?120:120*30.44/7;return value>=t?'ok':value>=t*.75?'warn':'bad'}
-    if(key==='reflection'){const t=period==='week'?150:150*30.44/7;return value>=t?'ok':value>=t*.75?'warn':'bad'}
-    if(key==='food'){const t=period==='week'?1:Math.ceil(30.44/7);return value<=t?'ok':value<=t+1?'warn':'bad'}
-    if(key==='alcohol'){const t=period==='week'?1:Math.floor(30.44/7);return value<=t?'ok':value<=t+1?'warn':'bad'}
-    if(key==='conversation')return value>=1?'ok':'bad';return 'warn';
+    if(['sport','gym','partner','reflection'].includes(key)){const t=targetFor(key,period);return value>=t?'ok':value>=t*.75?'warn':'bad'}
+    if(key==='food'){const t=targetFor(key,period);return value<=t?'ok':value<=t+1?'warn':'bad'}
+    if(key==='alcohol'){const t=targetFor(key,period);return value<=t?'ok':value<=t+1?'warn':'bad'}
+    if(key==='conversation')return period==='month'?(value>=1?'ok':'bad'):(value>=1?'ok':'neutral');return 'warn';
   }
-  function kpiDisplay(key,a){if(key==='social')return `${Math.round(a.socialAvg)} min/d`;if(key==='sport')return `${a.sport} min`;if(key==='partner')return `${a.partner} min`;if(key==='reflection')return `${a.reflection} min`;if(key==='food')return `${a.food}`;if(key==='alcohol')return `${a.alcoholDays} días`;if(key==='conversation')return `${a.conversation}`}
+  function kpiDisplay(key,a){if(key==='social')return `${Math.round(a.socialAvg)} min/d`;if(key==='sport')return `${a.sport} min`;if(key==='gym')return `${a.gym} min`;if(key==='partner')return `${a.partner} min`;if(key==='reflection')return `${a.reflection} min`;if(key==='food')return `${a.food}`;if(key==='alcohol')return `${a.alcoholDays} días`;if(key==='conversation')return `${a.conversation}`}
   function kpiVal(key,a){return key==='social'?a.socialAvg:key==='alcohol'?a.alcoholDays:a[key]}
-  function goalTargetText(key,period='week'){if(key==='social')return '< 30 min/día';if(key==='sport')return period==='week'?'240 min/sem':'≈1.043 min/mes';if(key==='partner')return period==='week'?'120 min/sem':'≈522 min/mes';if(key==='reflection')return period==='week'?'150 min/sem':'≈652 min/mes';if(key==='food')return period==='week'?'≤ 1/sem':'≤ 5/mes';if(key==='alcohol')return period==='week'?'≤ 1 día/sem':'≤ 4 días/mes';if(key==='conversation')return '≥ 1/mes'}
-  function renderWeekKpis(){const a=aggregate(weekStart,endOfWeek(weekStart));document.getElementById('kpiCoverage').textContent=`${a.days}/7 días registrados`;const keys=['social','sport','partner','reflection'];document.getElementById('weekKpis').innerHTML=keys.map(key=>miniKpiCard(key,a,'week')).join('')}
-  function miniKpiCard(key,a,period){const val=kpiVal(key,a),st=kpiStatus(key,val,period);let target= key==='social'?30:key==='sport'?(period==='week'?240:1043):key==='partner'?(period==='week'?120:522):key==='reflection'?(period==='week'?150:652):1;let p=key==='social'?Math.min(100,(val/target)*100):Math.min(100,(val/target)*100);if(key==='social')p=Math.min(100,Math.max(4,100-p));return `<div class="panel kpi-card"><div class="label">${goals[key].label}</div><div class="value">${kpiDisplay(key,a)}</div><div class="target">Meta ${goalTargetText(key,period)}</div><div class="progress ${st==='bad'?'bad':st==='warn'?'warn':''}"><div style="width:${p}%"></div></div></div>`}
+  function goalTargetText(key,period='week'){if(key==='social')return '< 30 min/día';if(key==='sport')return period==='week'?'180 min/sem':'≈783 min/mes';if(key==='gym')return period==='week'?'120 min/sem':'≈522 min/mes';if(key==='partner')return period==='week'?'120 min/sem':'≈522 min/mes';if(key==='reflection')return period==='week'?'150 min/sem':'≈652 min/mes';if(key==='food')return period==='week'?'≤ 1/sem':'≤ 5/mes';if(key==='alcohol')return period==='week'?'≤ 1 día/sem':'≤ 4 días/mes';if(key==='conversation')return period==='week'?'objetivo mensual':'≥ 1/mes'}
+  function renderWeekKpis(){const a=aggregate(weekStart,endOfWeek(weekStart));document.getElementById('kpiCoverage').textContent=`${a.days}/7 días registrados`;const keys=['social','sport','gym','partner'];document.getElementById('weekKpis').innerHTML=keys.map(key=>miniKpiCard(key,a,'week')).join('')}
+  function miniKpiCard(key,a,period){const val=kpiVal(key,a),st=kpiStatus(key,val,period),target=targetFor(key,period);let p=target?Math.min(100,(val/target)*100):0;if(key==='social')p=Math.min(100,Math.max(4,100-p));return `<div class="panel kpi-card"><div class="label">${goals[key].label}</div><div class="value">${kpiDisplay(key,a)}</div><div class="target">Meta ${goalTargetText(key,period)}</div><div class="progress ${st==='bad'?'bad':st==='warn'?'warn':''}"><div style="width:${p}%"></div></div></div>`}
 
-  function renderGoalCards(){const a=aggregate(weekStart,endOfWeek(weekStart));document.getElementById('goalCards').innerHTML=Object.keys(goals).map(k=>miniKpiCard(k,a,'week')).join('')}
+  function renderGoalCards(){const ref=startOfWeek(parseDate(currentKpiDate)),a=aggregate(ref,endOfWeek(ref));document.getElementById('goalCards').innerHTML=Object.keys(goals).map(k=>miniKpiCard(k,a,'week')).join('')}
 
   function renderReports(){
-    const wa=aggregate(weekStart,endOfWeek(weekStart));document.getElementById('reportWeekLabel').textContent=`${fmtDate(weekStart)} – ${fmtDate(endOfWeek(weekStart))}`;document.getElementById('weeklyReport').innerHTML=reportCard(wa,'week');
-    const ref=parseDate(selectedDate),ms=new Date(ref.getFullYear(),ref.getMonth(),1),me=new Date(ref.getFullYear(),ref.getMonth()+1,0),ma=aggregate(ms,me);document.getElementById('reportMonthLabel').textContent=capitalize(`${monthNames[ref.getMonth()]} ${ref.getFullYear()}`);document.getElementById('monthlyReport').innerHTML=reportCard(ma,'month');
+    const wa=aggregate(reportWeekStart,endOfWeek(reportWeekStart));document.getElementById('reportWeekLabel').textContent=`${fmtDate(reportWeekStart)} – ${fmtDate(endOfWeek(reportWeekStart))}`;document.getElementById('weeklyReport').innerHTML=reportCard(wa,'week');
+    const ms=new Date(reportMonthRef.getFullYear(),reportMonthRef.getMonth(),1),me=new Date(reportMonthRef.getFullYear(),reportMonthRef.getMonth()+1,0),ma=aggregate(ms,me);document.getElementById('reportMonthLabel').textContent=capitalize(`${monthNames[reportMonthRef.getMonth()]} ${reportMonthRef.getFullYear()}`);document.getElementById('monthlyReport').innerHTML=reportCard(ma,'month');
+    const currentWs=startOfWeek(new Date()),currentMs=new Date(new Date().getFullYear(),new Date().getMonth(),1);document.getElementById('reportNextWeek').disabled=reportWeekStart>=currentWs;document.getElementById('reportNextMonth').disabled=reportMonthRef>=currentMs;
   }
-  function reportCard(a,period){const keys=['social','sport','partner','reflection','food','alcohol','conversation'];const statuses=keys.map(k=>kpiStatus(k,kpiVal(k,a),period));const ok=statuses.filter(x=>x==='ok').length,overall=ok>=6?'ok':ok>=4?'warn':'bad';const label=overall==='ok'?'En objetivo':overall==='warn'?'Atención':'Necesita ajuste';return `<div class="panel report-card"><div class="report-head"><div><h3>Scorecard ${period==='week'?'semanal':'mensual'}</h3><div class="report-meta">Cobertura: ${a.days} días con registro · ${ok}/7 KPIs en objetivo</div></div><span class="status ${overall}">${label}</span></div>${keys.map(k=>`<div class="report-row"><span>${goals[k].label}<br><small style="color:#94a3b8">Meta ${goalTargetText(k,period)}</small></span><b>${kpiDisplay(k,a)} <span class="status ${kpiStatus(k,kpiVal(k,a),period)}" style="margin-left:5px">${kpiStatus(k,kpiVal(k,a),period)==='ok'?'OK':kpiStatus(k,kpiVal(k,a),period)==='warn'?'Revisar':'Fuera'}</span></b></div>`).join('')}</div>`}
+  function reportCard(a,period){const keys=['social','sport','gym','partner','reflection','food','alcohol','conversation'];const scoreKeys=period==='week'?keys.filter(k=>k!=='conversation'):keys;const statuses=scoreKeys.map(k=>kpiStatus(k,kpiVal(k,a),period));const ok=statuses.filter(x=>x==='ok').length,total=scoreKeys.length,overall=ok>=Math.ceil(total*.8)?'ok':ok>=Math.ceil(total*.55)?'warn':'bad';const label=overall==='ok'?'En objetivo':overall==='warn'?'Atención':'Necesita ajuste';return `<div class="panel report-card"><div class="report-head"><div><h3>Scorecard ${period==='week'?'semanal':'mensual'}</h3><div class="report-meta">Cobertura: ${a.days} días con registro · ${ok}/${total} KPIs evaluados en objetivo</div></div><span class="status ${overall}">${label}</span></div>${keys.map(k=>{const st=kpiStatus(k,kpiVal(k,a),period),txt=st==='ok'?'OK':st==='warn'?'Revisar':st==='neutral'?'Mensual':'Fuera';return `<div class="report-row"><span>${goals[k].label}<br><small style="color:#94a3b8">Meta ${goalTargetText(k,period)}</small></span><b>${kpiDisplay(k,a)} <span class="status ${st}" style="margin-left:5px">${txt}</span></b></div>`}).join('')}</div>`}
 
-  function loadKpiForm(ds){currentKpiDate=ds;const k=getKpi(ds)||{};document.getElementById('kpiDateLabel').textContent=fmtDate(parseDate(ds),{weekday:'long',day:'numeric',month:'long'});['social','sport','partner','reflection','alcohol','food'].forEach(key=>document.getElementById('k'+capitalize(key)).value=k[key]??0);const sw=document.getElementById('kConversation');sw.classList.toggle('on',!!k.conversation);document.getElementById('kNote').value=k.note||''}
-  function saveKpi(){state.kpis[currentKpiDate]={social:num(document.getElementById('kSocial').value),sport:num(document.getElementById('kSport').value),partner:num(document.getElementById('kPartner').value),reflection:num(document.getElementById('kReflection').value),alcohol:num(document.getElementById('kAlcohol').value),food:num(document.getElementById('kFood').value),conversation:document.getElementById('kConversation').classList.contains('on'),note:document.getElementById('kNote').value.trim(),updatedAt:new Date().toISOString()};save();renderAll();toast('Registro diario guardado.');showTab('week')}
+  function loadKpiForm(ds){const today=isoDate(new Date());if(ds>today)ds=today;currentKpiDate=ds;const k=getKpi(ds)||{};document.getElementById('kpiDateLabel').textContent=fmtDate(parseDate(ds),{weekday:'long',day:'numeric',month:'long'});const picker=document.getElementById('kpiDatePicker');picker.value=ds;picker.max=today;['social','sport','gym','partner','reflection','alcohol','food'].forEach(key=>document.getElementById('k'+capitalize(key)).value=k[key]??0);const sw=document.getElementById('kConversation');sw.classList.toggle('on',!!k.conversation);document.getElementById('kNote').value=k.note||'';document.getElementById('kpiNextDay').disabled=ds>=today}
+  function changeKpiDate(delta){loadKpiForm(isoDate(addDays(parseDate(currentKpiDate),delta)))}
+  function saveKpi(){state.kpis[currentKpiDate]={social:num(document.getElementById('kSocial').value),sport:num(document.getElementById('kSport').value),gym:num(document.getElementById('kGym').value),partner:num(document.getElementById('kPartner').value),reflection:num(document.getElementById('kReflection').value),alcohol:num(document.getElementById('kAlcohol').value),food:num(document.getElementById('kFood').value),conversation:document.getElementById('kConversation').classList.contains('on'),note:document.getElementById('kNote').value.trim(),updatedAt:new Date().toISOString()};save();renderAll();loadKpiForm(currentKpiDate);toast('Registro diario guardado / actualizado.')}
+
+  function monthlySeries(key){const now=new Date(),rows=[];for(let i=11;i>=0;i--){const ref=new Date(now.getFullYear(),now.getMonth()-i,1),end=new Date(ref.getFullYear(),ref.getMonth()+1,0),a=aggregate(ref,end);rows.push({ref,a,value:a.days?kpiVal(key,a):null})}return rows}
+  function trendCard(key){const rows=monthlySeries(key),target=targetFor(key,'month'),vals=rows.map(r=>r.value).filter(v=>v!==null),max=Math.max(target||1,...vals,1)*1.15,w=720,h=135,padL=28,padR=12,padT=12,padB=25,cw=w-padL-padR,ch=h-padT-padB;const x=i=>padL+(cw*(i/11)),y=v=>padT+ch-(Math.max(0,v)/max)*ch;const pts=rows.map((r,i)=>r.value===null?null:`${x(i).toFixed(1)},${y(r.value).toFixed(1)}`).filter(Boolean).join(' ');const ty=y(target);const circles=rows.map((r,i)=>r.value===null?'':`<circle cx="${x(i)}" cy="${y(r.value)}" r="4" fill="#0f766e"><title>${monthNames[r.ref.getMonth()]} ${r.ref.getFullYear()}: ${formatTrendValue(key,r.value)}</title></circle>`).join('');const labels=rows.map((r,i)=>`<text x="${x(i)}" y="130" text-anchor="middle" font-size="8" fill="#94a3b8">${monthNames[r.ref.getMonth()].slice(0,3)}</text>`).join('');const latest=[...rows].reverse().find(r=>r.value!==null);return `<div class="panel trend-card"><div class="trend-head"><div><h3>${goals[key].label}</h3><small>Meta ${goalTargetText(key,'month')}</small></div><div class="trend-value">${latest?formatTrendValue(key,latest.value):'Sin datos'}</div></div><svg class="trend-chart" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-label="Evolución de ${goals[key].label}"><line x1="${padL}" y1="${ty}" x2="${w-padR}" y2="${ty}" stroke="#d97706" stroke-width="2" stroke-dasharray="7 6"/><polyline points="${pts}" fill="none" stroke="#0f766e" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>${circles}${labels}</svg><div class="trend-legend"><span>Hace 11 meses</span><span>— Meta</span><span>Mes actual</span></div></div>`}
+  function formatTrendValue(key,v){if(key==='social')return `${Math.round(v)} min/d`;if(['sport','gym','partner','reflection'].includes(key))return `${Math.round(v)} min`;if(key==='alcohol')return `${Math.round(v)} días`;return `${Math.round(v)}`}
+  function renderTrends(){document.getElementById('trendGrid').innerHTML=Object.keys(goals).map(trendCard).join('')}
 
   function openEventModal(event=null,start=null){
     const m=document.getElementById('eventModal');m.classList.remove('hidden');const isEdit=!!event;document.getElementById('eventModalTitle').textContent=isEdit?'Editar actividad':'Nueva actividad';document.getElementById('eventId').value=isEdit?event.id:'';document.getElementById('eventTitle').value=isEdit?event.title:'';document.getElementById('eventDate').value=isEdit?event.date:selectedDate;document.getElementById('eventCategory').value=isEdit?event.category:'personal';document.getElementById('eventStart').value=isEdit?event.start:(start||defaultStartForSelected());document.getElementById('eventEnd').value=isEdit?event.end:minToTime(timeToMin(start||defaultStartForSelected())+60);document.getElementById('eventNotes').value=isEdit?event.notes||'':'';document.getElementById('eventRepeat').value=isEdit?event.repeat||'none':'none';document.getElementById('deleteEvent').classList.toggle('hidden',!isEdit)
@@ -346,9 +372,9 @@
   function settingsToForm(){const s=state.settings;['WeekStart','WeekEnd','WorkStart','WorkEnd','FreeStart','FreeEnd','CommuteMorning','CommuteEvening','FocusMin','MbaAnchor','NotifyTime'].forEach(k=>document.getElementById('set'+k).value=s[k.charAt(0).toLowerCase()+k.slice(1)]);document.getElementById('setMbaEnabled').classList.toggle('on',s.mbaEnabled);document.getElementById('setFocusEnabled').classList.toggle('on',s.focusEnabled)}
   function saveSettings(){const s=state.settings;s.weekStart=document.getElementById('setWeekStart').value;s.weekEnd=document.getElementById('setWeekEnd').value;s.workStart=document.getElementById('setWorkStart').value;s.workEnd=document.getElementById('setWorkEnd').value;s.freeStart=document.getElementById('setFreeStart').value;s.freeEnd=document.getElementById('setFreeEnd').value;s.commuteMorning=num(document.getElementById('setCommuteMorning').value);s.commuteEvening=num(document.getElementById('setCommuteEvening').value);s.focusMin=num(document.getElementById('setFocusMin').value)||90;s.mbaAnchor=document.getElementById('setMbaAnchor').value;s.notifyTime=document.getElementById('setNotifyTime').value;s.mbaEnabled=document.getElementById('setMbaEnabled').classList.contains('on');s.focusEnabled=document.getElementById('setFocusEnabled').classList.contains('on');save();renderAll();toast('Ajustes guardados.')}
 
-  function showTab(tab){currentTab=tab;document.querySelectorAll('section[id^="tab-"]').forEach(s=>s.classList.toggle('hidden',s.id!==`tab-${tab}`));document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));document.getElementById('floatingAdd').classList.toggle('hidden',tab!=='week');if(tab==='kpis'){loadKpiForm(isoDate(new Date()));renderGoalCards()}if(tab==='reports')renderReports();if(tab==='settings')settingsToForm()}
+  function showTab(tab){currentTab=tab;document.querySelectorAll('section[id^="tab-"]').forEach(s=>s.classList.toggle('hidden',s.id!==`tab-${tab}`));document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));document.getElementById('floatingAdd').classList.toggle('hidden',tab!=='week');if(tab==='kpis'){loadKpiForm(currentKpiDate);renderGoalCards()}if(tab==='reports')renderReports();if(tab==='trends')renderTrends();if(tab==='settings')settingsToForm()}
 
-  function renderAll(){renderWeek();renderReports();renderGoalCards();checkBanners()}
+  function renderAll(){renderWeek();renderReports();renderGoalCards();renderTrends();checkBanners()}
 
   async function requestNotifications(){if(!('Notification'in window)){alert('Este navegador no soporta notificaciones web.');return}const p=await Notification.requestPermission();toast(p==='granted'?'Notificaciones activadas.':'No se activaron las notificaciones.')}
   function notify(title,body,key){if(state.notificationLog[key])return;if('Notification'in window&&Notification.permission==='granted'){new Notification(title,{body,icon:'icon-192.png'});state.notificationLog[key]=new Date().toISOString();save()}}
@@ -357,7 +383,7 @@
     const isSunday=now.getDay()===0,isMonthEnd=addDays(now,1).getMonth()!==now.getMonth();
     if(isSunday&&hhmm>='20:30'&&hhmm<'21:30'){title='Momento de planificar la semana';text='Revisa tus 7 días, reuniones, bloque de foco y espacios personales.';action='week';notify(title,text,'planning-'+today)}
     if(hhmm>=notifyT&&!getKpi(today)){title='Check-in diario pendiente';text='Registra tus KPIs de hoy en minutos.';action='kpi';notify(title,text,'kpi-'+today)}
-    if(isSunday&&hhmm>='21:35'){notify('Reporte semanal disponible','Revisa cómo vas con tus 7 KPIs.','week-report-'+today);if(!title){title='Tu reporte semanal está listo';text='Revisa tendencias antes de planificar la próxima semana.';action='reports'}}
+    if(isSunday&&hhmm>='21:35'){notify('Reporte semanal disponible','Revisa cómo vas con tus 8 KPIs.','week-report-'+today);if(!title){title='Tu reporte semanal está listo';text='Revisa tendencias antes de planificar la próxima semana.';action='reports'}}
     if(isMonthEnd&&hhmm>='21:35'){notify('Reporte mensual disponible','Cierra el mes y revisa tus tendencias.','month-report-'+today);if(!title){title='Cierre mensual';text='Tu scorecard mensual ya está disponible.';action='reports'}}
     const banner=document.getElementById('notificationBanner');banner.classList.toggle('hidden',!title);if(title){document.getElementById('bannerTitle').textContent=title;document.getElementById('bannerText').textContent=text;document.getElementById('bannerAction').dataset.action=action}
   }
@@ -379,6 +405,9 @@
   document.getElementById('addEventTop').addEventListener('click',()=>openEventModal());document.getElementById('floatingAdd').addEventListener('click',()=>openEventModal());
   document.getElementById('saveEvent').addEventListener('click',saveEvent);document.getElementById('deleteEvent').addEventListener('click',deleteEvent);
   document.getElementById('kConversation').addEventListener('click',e=>e.currentTarget.classList.toggle('on'));document.getElementById('saveKpi').addEventListener('click',saveKpi);
+  document.getElementById('kpiPrevDay').addEventListener('click',()=>changeKpiDate(-1));document.getElementById('kpiNextDay').addEventListener('click',()=>changeKpiDate(1));document.getElementById('kpiDatePicker').addEventListener('change',e=>{if(e.target.value)loadKpiForm(e.target.value)});
+  document.getElementById('reportPrevWeek').addEventListener('click',()=>{reportWeekStart=addDays(reportWeekStart,-7);renderReports()});document.getElementById('reportNextWeek').addEventListener('click',()=>{const n=addDays(reportWeekStart,7);if(n<=startOfWeek(new Date()))reportWeekStart=n;renderReports()});
+  document.getElementById('reportPrevMonth').addEventListener('click',()=>{reportMonthRef=new Date(reportMonthRef.getFullYear(),reportMonthRef.getMonth()-1,1);renderReports()});document.getElementById('reportNextMonth').addEventListener('click',()=>{const n=new Date(reportMonthRef.getFullYear(),reportMonthRef.getMonth()+1,1),cur=new Date(new Date().getFullYear(),new Date().getMonth(),1);if(n<=cur)reportMonthRef=n;renderReports()});
   document.getElementById('setMbaEnabled').addEventListener('click',e=>e.currentTarget.classList.toggle('on'));document.getElementById('setFocusEnabled').addEventListener('click',e=>e.currentTarget.classList.toggle('on'));document.getElementById('saveSettings').addEventListener('click',saveSettings);
   document.getElementById('notifyBtn').addEventListener('click',requestNotifications);
   document.getElementById('exportData').addEventListener('click',exportData);document.getElementById('importFile').addEventListener('change',e=>{if(e.target.files[0])importData(e.target.files[0])});document.getElementById('resetData').addEventListener('click',resetData);

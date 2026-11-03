@@ -1,26 +1,24 @@
-# Semana con Propósito — V1
+# Semana con Propósito — V2
 
-Aplicación web móvil-first para planificación semanal y seguimiento personal.
+Aplicación web móvil-first para planificación semanal, seguimiento personal y KPIs.
 
-## Qué incluye
-- Agenda semanal con días laborales, trayectos, almuerzo bloqueado, fines de semana y feriados.
-- Feriados chilenos 2026 precargados y consulta automática para otros años cuando hay conexión.
-- Clases MBA quincenales, ancladas al viernes 23-10-2026 y sábado siguiente; el ancla es editable.
-- Actividades manuales: reuniones, doctor, matrimonios, deporte, ocio y otros compromisos.
-- Reubicación automática de un bloque diario de trabajo profundo de 90 min después de cargar reuniones.
-- Check-in diario de KPIs y scorecards semanales/mensuales.
-- Respaldo e importación de datos en JSON.
-- PWA instalable si se publica por HTTPS.
+## Cambios V2
 
-## Uso recomendado
-1. El domingo por la noche abre la pestaña Semana.
-2. Carga reuniones y compromisos ya conocidos.
-3. Presiona “Auto-ubicar foco 90 min”.
-4. Recorre los 7 días y marca cada uno como planificado.
-5. Cada noche completa el check-in de KPIs.
+- Nueva pestaña **Evolución** con gráficos mensuales de los últimos 12 meses para cada KPI.
+- El registro diario puede completarse o editarse durante todo el día y también en fechas anteriores.
+- Nuevo KPI **Gimnasio**, meta: **120 min/semana**.
+- Meta de **Deporte** actualizada a **180 min/semana**.
+- Reportes semanales y mensuales navegables hacia períodos anteriores.
+- Los registros permanecen en `localStorage`; la evolución está diseñada para consultar al menos 12 meses.
+- Service worker actualizado a V2 para evitar que GitHub Pages/PWA siga mostrando la versión anterior.
 
-## Importante sobre notificaciones
-Los avisos funcionan mientras la web/PWA está activa. Las notificaciones móviles garantizadas con la app completamente cerrada requieren un backend de push en una siguiente versión.
+## Actualizar en GitHub Pages
 
-## Datos
-V1 guarda todo en `localStorage` del navegador. Usa “Exportar JSON” como respaldo periódico.
+1. En el repositorio, reemplazar `index.html`, `sw.js`, `manifest.webmanifest`, `README.md` y los íconos por los archivos de esta carpeta.
+2. Hacer **Commit changes** sobre `main`.
+3. GitHub Pages volverá a desplegar automáticamente.
+4. En el celular, abrir la app con conexión a internet una vez. Si siguiera mostrando V1, cerrar la PWA completamente y volver a abrirla; como último recurso, quitarla de pantalla de inicio y agregarla nuevamente.
+
+## Datos existentes
+
+La V2 mantiene la misma clave de almacenamiento (`semana_proposito_v1`) para conservar los datos de la V1 en el mismo navegador/dispositivo. Los registros anteriores no tienen `gym`; se interpretan como 0 minutos hasta que sean editados.
