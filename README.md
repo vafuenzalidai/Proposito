@@ -1,4 +1,4 @@
-# Happiness Management — V3
+# Happiness Management — V3.1
 
 Aplicación web móvil para planificación semanal, registro diario y seguimiento de KPIs.
 
@@ -34,3 +34,8 @@ Antes de una actualización importante es recomendable usar **Exportar JSON** de
 ## Logo
 
 Se agregó el archivo `logo-happiness-management.png` y se reemplazaron `icon-192.png` e `icon-512.png` por el nuevo logo de la app.
+
+
+## Ajuste V3.1
+
+Se corrigió el tamaño del logo en el encabezado agregando estilos para que la imagen se ajuste al contenedor sin desbordarse.
